@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Navigation\NavigationGroup;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,9 +29,18 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->passwordReset()
+            ->profile()
+            // название и иконка
+            ->brandName('Театр кукол — Админ-панель')
+            ->favicon(asset('favicon.ico'))
             ->colors([
                 'primary' => Color::Amber,
             ])
+            // настройка сайдбара
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarFullyCollapsibleOnDesktop()
+            // регистрация ресурсов
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -54,6 +64,20 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            // настройка путей после логина/логаута
+            ->homeUrl('/admin')
+            ->loginRouteSlug('login')
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Контент')
+                    ->icon('heroicon-o-book-open'),
+                NavigationGroup::make()
+                    ->label('Продажи')
+                    ->icon('heroicon-o-shopping-cart'),
+                NavigationGroup::make()
+                    ->label('Настройки')
+                    ->icon('heroicon-o-cog-6-tooth'),
             ]);
     }
 }
