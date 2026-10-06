@@ -27,17 +27,9 @@ class VenuesTable
                     ->wrap()
                     ->limit(50),
 
-                TextColumn::make('rows_count')
-                    ->label('Рядов')
-                    ->numeric()
-                    ->sortable()
-                    ->badge()
-                    ->color('info'),
-
-                TextColumn::make('seats_per_row')
-                    ->label('Мест в ряду')
-                    ->numeric()
-                    ->sortable()
+                TextColumn::make('sectors_count')
+                    ->label('Секторов')
+                    ->counts('sectors')
                     ->badge()
                     ->color('info'),
 
@@ -46,6 +38,12 @@ class VenuesTable
                     ->counts('seats')
                     ->badge()
                     ->color('success'),
+
+                TextColumn::make('performances_count')
+                    ->label('Показов')
+                    ->counts('performances')
+                    ->badge()
+                    ->color('warning'),
 
                 TextColumn::make('created_at')
                     ->label('Создан')

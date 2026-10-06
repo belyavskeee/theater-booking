@@ -53,7 +53,7 @@ class VenueResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            \App\Filament\Resources\Venues\RelationManagers\SectorsRelationManager::class,
         ];
     }
 

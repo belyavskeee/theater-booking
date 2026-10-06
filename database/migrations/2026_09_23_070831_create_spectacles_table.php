@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('intermission_minutes')->default(0);
             $table->string('director')->nullable();
             $table->string('artist')->nullable();
+            $table->string('author')->nullable();
             $table->json('cast')->nullable();
             $table->string('poster_path')->nullable();
             $table->string('trailer_url')->nullable();

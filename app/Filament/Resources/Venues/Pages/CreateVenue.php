@@ -9,18 +9,10 @@ class CreateVenue extends CreateRecord
 {
     protected static string $resource = VenueResource::class;
 
-    protected function afterCreate(): void
+    // Опционально: после создания сразу перейти на страницу редактирования,
+    // где можно добавить секторы
+    protected function getRedirectUrl(): string
     {
-        $venue = $this->record;
-
-        for ($row = 1; $row <= $venue->rows_count; $row++) {
-            for ($seat = 1; $seat <= $venue->seats_per_row; $seat++) {
-                $venue->seats()->create([
-                    'row_number' => $row,
-                    'seat_number' => $seat,
-                    'sector' => 'Партер',
-                ]);
-            }
-        }
+        return $this->getResource()::getUrl('edit', ['record' => $this->record]);
     }
 }

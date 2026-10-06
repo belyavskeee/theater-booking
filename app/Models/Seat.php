@@ -11,21 +11,28 @@ class Seat extends Model
 
     protected $fillable = [
         'venue_id',
+        'sector_id',       
         'row_number',
         'seat_number',
-        'sector',
         'price_modifier',
     ];
 
     protected $casts = [
-        'row_number' => 'integer',
-        'seat_number' => 'integer',
-        'price_modifier' => 'decimal:2'
+        'row_number'     => 'integer',
+        'seat_number'    => 'integer',
+        'price_modifier' => 'decimal:2',
     ];
+
+    // Связи 
 
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function sector()
+    {
+        return $this->belongsTo(Sector::class);
     }
 
     public function tickets()
@@ -33,21 +40,20 @@ class Seat extends Model
         return $this->hasMany(Ticket::class);
     }
 
-    // хелперы
-    // проверка занято то ли место на показе
-    public function isTakenFor(Performance $performance): bool 
+    // Хелперы 
+
+    public function isTakenFor(Performance $performance): bool
     {
         return $this->tickets()->where('performance_id', $performance->id)->exists();
     }
 
-    // цена конкретного показа (учитывая модификатор)
-    public function priceFor(Performance $performance): float 
+    public function priceFor(Performance $performance): float
     {
-        return round($performance->base_price * this->price_modifier, 2);
+        $modifier = $this->price_modifier ?? $this->sector?->price_modifier ?? 1.0;
+        return round($performance->base_price * $modifier, 2);
     }
 
-    // читаемое имя "Ряд 3, место 12"
-    public function getLableAttribute(): string 
+    public function getLabelAttribute(): string
     {
         return "Ряд {$this->row_number}, место {$this->seat_number}";
     }

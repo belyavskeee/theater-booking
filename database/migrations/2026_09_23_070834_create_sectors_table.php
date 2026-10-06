@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seats', function (Blueprint $table) {
+        Schema::create('sectors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('venue_id')->constrained()->cascadeOnDelete();
-            $table->unsignedSmallInteger('row_number');
-            $table->unsignedSmallInteger('seat_number');
-            $table->string('sector')->default('Партер');
+            $table->string('name');
+            $table->unsignedSmallInteger('rows_count')->default(10); 
+            $table->unsignedSmallInteger('seats_per_row');
             $table->decimal('price_modifier', 4, 2)->default(1.00);
+            $table->unsignedSmallInteger('sort_order')->default(0);
             $table->timestamps();
-
-            $table->unique(['venue_id', 'row_number', 'seat_number']);
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seats');
+        Schema::dropIfExists('sectors');
     }
 };

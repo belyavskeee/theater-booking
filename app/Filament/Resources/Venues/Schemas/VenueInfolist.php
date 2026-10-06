@@ -24,27 +24,31 @@ class VenueInfolist
                     ])
                     ->columns(2),
 
-                Section::make('Размеры зала')
+                Section::make('Вместимость')
                     ->schema([
-                        TextEntry::make('rows_count')
-                            ->label('Количество рядов')
-                            ->numeric()
+                        TextEntry::make('sectors_count')
+                            ->label('Секторов')
+                            ->state(fn ($record) => $record->sectors()->count())
                             ->badge()
                             ->color('info'),
 
-                        TextEntry::make('seats_per_row')
-                            ->label('Мест в ряду')
-                            ->numeric()
+                        TextEntry::make('capacity')
+                            ->label('Проектная вместимость')
+                            ->state(fn ($record) => $record->sectors->sum(
+                                fn ($s) => $s->rows_count * $s->seats_per_row
+                            ))
                             ->badge()
-                            ->color('info'),
+                            ->color('primary')
+                            ->helperText('Сумма по всем секторам.'),
 
                         TextEntry::make('seats_count')
-                            ->label('Всего мест (в базе)')
+                            ->label('Мест в базе')
                             ->state(fn ($record) => $record->seats()->count())
-                            ->numeric()
                             ->badge()
-                            ->color('success')
-                            ->helperText('Если не совпадает с «Ряды × Мест в ряду», значит, места не сгенерированы.'),
+                            ->color(fn ($record) => $record->seats()->count() === $record->sectors->sum(
+                                fn ($s) => $s->rows_count * $s->seats_per_row
+                            ) ? 'success' : 'danger')
+                            ->helperText('Зелёный — совпадает с проектной. Красный — есть расхождения.'),
                     ])
                     ->columns(3),
 

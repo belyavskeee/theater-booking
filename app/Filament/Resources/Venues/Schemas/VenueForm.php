@@ -29,29 +29,6 @@ class VenueForm
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
-
-                Section::make('Размеры зала')
-                    ->description('Количество мест рассчитывается как «Ряды × Мест в ряду». После сохранения места сгенерируются автоматически.')
-                    ->schema([
-                        TextInput::make('rows_count')
-                            ->label('Количество рядов')
-                            ->required()
-                            ->numeric()
-                            ->default(10)
-                            ->minValue(1)
-                            ->maxValue(100)
-                            ->suffix('ряд.'),
-
-                        TextInput::make('seats_per_row')
-                            ->label('Мест в ряду')
-                            ->required()
-                            ->numeric()
-                            ->default(12)
-                            ->minValue(1)
-                            ->maxValue(100)
-                            ->suffix('мест'),
-                    ])
-                    ->columns(2),
             ]);
     }
 }

@@ -12,13 +12,6 @@ class Venue extends Model
     protected $fillable = [
         'name',
         'address',
-        'rows_count',
-        'seats_per_row',
-    ];
-
-    protected $casts = [
-        'row_count' => 'integer',
-        'seats_per_row' => 'integer',
     ];
 
 
@@ -32,9 +25,20 @@ class Venue extends Model
         return $this->hasMany(Performance::class);
     }
 
-    // хелпер общее число мест в зале
-    public function totalSeats(): int 
+    public function sectors() 
+    { 
+        return $this->hasMany(Sector::class)->orderBy('sort_order'); 
+    }
+
+    // Общее количество мест (по всем секторам)
+    public function totalSeats(): int
     {
         return $this->seats()->count();
+    }
+
+    // Суммарная вместимость по конфигурации секторов (без обращения к БД)
+    public function capacityAttribute(): int
+    {
+        return $this->sectors->sum(fn ($s) => $s->rows_count * $s->seats_per_row);
     }
 }

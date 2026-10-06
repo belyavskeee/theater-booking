@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('venues', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Большая сцена, малая сцена
+            $table->string('name');
             $table->string('address'); 
-            $table->unsignedSmallInteger('rows_count')->default(0);
-            $table->unsignedSmallInteger('seats_per_row')->default(0);
             $table->timestamps();
         });
     }
