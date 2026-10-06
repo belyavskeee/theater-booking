@@ -16,34 +16,57 @@ class VenuesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Название')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('address')
-                    ->searchable(),
+                    ->label('Адрес')
+                    ->searchable()
+                    ->wrap()
+                    ->limit(50),
+
                 TextColumn::make('rows_count')
+                    ->label('Рядов')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color('info'),
+
                 TextColumn::make('seats_per_row')
+                    ->label('Мест в ряду')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color('info'),
+
+                TextColumn::make('seats_count')
+                    ->label('Всего мест')
+                    ->counts('seats')
+                    ->badge()
+                    ->color('success'),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Создан')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Обновлён')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('name')
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->label('Просмотр'),
+                EditAction::make()->label('Изменить'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ]);
     }

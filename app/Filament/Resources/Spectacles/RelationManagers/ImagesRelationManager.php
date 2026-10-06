@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\Spectacles\RelationManagers;
 
+use App\Models\SpectacleImage;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Hidden;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
@@ -33,10 +34,8 @@ class ImagesRelationManager extends RelationManager
                     ->directory('spectacles/gallery')
                     ->required(),
 
-                TextInput::make('sort_order')
-                    ->label('Порядок')
-                    ->numeric()
-                    ->default(0),
+                Hidden::make('sort_order')
+                    ->default(fn () => (int) SpectacleImage::max('sort_order') + 1),
             ]);
     }
 

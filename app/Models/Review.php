@@ -30,7 +30,7 @@ class Review extends Model
 
     public function spectacle()
     {
-        return $this-belongsTo(Spectacle::class);
+        return $this->belongsTo(Spectacle::class);
     }
 
     public function votes()

@@ -29,12 +29,19 @@ class SpectacleForm
                     ->label('Название')
                     ->required()
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn ($state, Set $set) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(function (string $operation, $state, Set $set) {
+                        // Автозаполнение slug только при создании записи
+                        if ($operation === 'create') {
+                            $set('slug', Str::slug($state));
+                        }
+                    }),
 
                 TextInput::make('slug')
-                    ->label('Slug')
+                    ->label('Ссылка (URL)')
+                    ->helperText('Автоматически заполняется из названия. Оставьте пустым для генерации.')
                     ->required()
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(255),
 
                 Textarea::make('short_description')
                     ->label('Краткое описание')

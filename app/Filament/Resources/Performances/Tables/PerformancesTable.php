@@ -15,39 +15,73 @@ class PerformancesTable
     {
         return $table
             ->columns([
-                TextColumn::make('spectacle_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('venue_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('spectacle.title')
+                    ->label('Спектакль')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold')
+                    ->wrap()
+                    ->limit(40),
+
+                TextColumn::make('venue.name')
+                    ->label('Зал')
+                    ->searchable()
+                    ->badge()
+                    ->color('info'),
+
                 TextColumn::make('starts_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->label('Дата и время')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable()
+                    ->icon('heroicon-o-calendar'),
+
                 TextColumn::make('base_price')
-                    ->money()
+                    ->label('Базовая цена')
+                    ->money('BYN')
                     ->sortable(),
+
                 TextColumn::make('status')
-                    ->badge(),
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'scheduled' => 'Запланирован',
+                        'cancelled' => 'Отменён',
+                        'finished'  => 'Завершён',
+                        default     => $state,
+                    })
+                    ->color(fn (string $state) => match ($state) {
+                        'scheduled' => 'success',
+                        'cancelled' => 'danger',
+                        'finished'  => 'gray',
+                        default     => 'gray',
+                    }),
+
+                TextColumn::make('tickets_count')
+                    ->label('Продано билетов')
+                    ->counts('tickets')
+                    ->badge()
+                    ->color('warning'),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Создан')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Обновлён')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('starts_at', 'desc')
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->label('Просмотр'),
+                EditAction::make()->label('Изменить'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ]);
     }

@@ -15,27 +15,42 @@ class CategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Название')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('slug')
-                    ->searchable(),
+                    ->label('Ссылка (URL)')
+                    ->searchable()
+                    ->copyable()
+                    ->color('gray'),
+
+                TextColumn::make('spectacles_count')
+                    ->label('Спектаклей')
+                    ->counts('spectacles')
+                    ->badge()
+                    ->color('primary'),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Создана')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Обновлена')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('name')
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->label('Изменить'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ]);
     }

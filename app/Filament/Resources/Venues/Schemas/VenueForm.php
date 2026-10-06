@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Venues\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class VenueForm
@@ -11,18 +12,46 @@ class VenueForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('address')
-                    ->required(),
-                TextInput::make('rows_count')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                TextInput::make('seats_per_row')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
+                Section::make('Основная информация')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Название зала')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Например: Большая сцена')
+                            ->helperText('Название, которое будет отображаться на сайте.'),
+
+                        TextInput::make('address')
+                            ->label('Адрес')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('г. Минск, ул. Примерная, 1')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Размеры зала')
+                    ->description('Количество мест рассчитывается как «Ряды × Мест в ряду». После сохранения места сгенерируются автоматически.')
+                    ->schema([
+                        TextInput::make('rows_count')
+                            ->label('Количество рядов')
+                            ->required()
+                            ->numeric()
+                            ->default(10)
+                            ->minValue(1)
+                            ->maxValue(100)
+                            ->suffix('ряд.'),
+
+                        TextInput::make('seats_per_row')
+                            ->label('Мест в ряду')
+                            ->required()
+                            ->numeric()
+                            ->default(12)
+                            ->minValue(1)
+                            ->maxValue(100)
+                            ->suffix('мест'),
+                    ])
+                    ->columns(2),
             ]);
     }
 }

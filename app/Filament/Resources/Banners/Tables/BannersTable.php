@@ -16,36 +16,68 @@ class BannersTable
     {
         return $table
             ->columns([
+                ImageColumn::make('image_path')
+                    ->label('Превью')
+                    ->height(60)
+                    ->width(120),
+
                 TextColumn::make('title')
-                    ->searchable(),
-                ImageColumn::make('image_path'),
+                    ->label('Заголовок')
+                    ->searchable()
+                    ->weight('bold')
+                    ->wrap()
+                    ->limit(40),
+
+                TextColumn::make('subtitle')
+                    ->label('Подзаголовок')
+                    ->searchable()
+                    ->wrap()
+                    ->limit(50)
+                    ->color('gray')
+                    ->toggleable(),
+
                 TextColumn::make('button_text')
-                    ->searchable(),
+                    ->label('Текст кнопки')
+                    ->badge()
+                    ->color('primary')
+                    ->toggleable(),
+
                 TextColumn::make('button_url')
-                    ->searchable(),
+                    ->label('Ссылка кнопки')
+                    ->copyable()
+                    ->limit(30)
+                    ->color('gray')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('sort_order')
+                    ->label('Порядок')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color('info'),
+
                 IconColumn::make('is_active')
-                    ->boolean(),
+                    ->label('Активен')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Создан')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('sort_order')
+            ->reorderable('sort_order')
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->label('Изменить'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ]);
     }
