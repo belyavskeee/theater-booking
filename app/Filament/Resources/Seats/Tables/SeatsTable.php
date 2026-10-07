@@ -2,11 +2,17 @@
 
 namespace App\Filament\Resources\Seats\Tables;
 
+use App\Models\Seat;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Schemas\Components\Utilities\Get;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 
 class SeatsTable
@@ -17,10 +23,15 @@ class SeatsTable
             ->columns([
                 TextColumn::make('venue.name')
                     ->label('Зал')
-                    ->searchable()
-                    ->sortable()
                     ->badge()
-                    ->color('info'),
+                    ->color('info')
+                    ->sortable(),
+
+                TextColumn::make('sector.name')
+                    ->label('Сектор')
+                    ->badge()
+                    ->color('primary')
+                    ->sortable(),
 
                 TextColumn::make('row_number')
                     ->label('Ряд')
@@ -34,40 +45,74 @@ class SeatsTable
                     ->numeric()
                     ->sortable()
                     ->badge()
-                    ->color('primary'),
-
-                TextColumn::make('sector')
-                    ->label('Сектор')
-                    ->searchable()
-                    ->sortable(),
+                    ->color('gray'),
 
                 TextColumn::make('price_modifier')
-                    ->label('Коэффициент цены')
+                    ->label('Коэфф. цены')
                     ->numeric(decimalPlaces: 2)
                     ->suffix('×')
-                    ->sortable()
-                    ->color(fn ($state) => $state > 1 ? 'success' : 'gray')
-                    ->toggleable(),
-
-                TextColumn::make('tickets_count')
-                    ->label('Билетов продано')
-                    ->counts('tickets')
                     ->badge()
-                    ->color('warning'),
+                    ->color(fn ($state) => $state > 1 ? 'warning' : ($state < 1 ? 'success' : 'gray'))
+                    ->sortable(),
 
-                TextColumn::make('created_at')
-                    ->label('Создано')
-                    ->dateTime('d.m.Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('has_tickets')
+                    ->label('Есть билеты')
+                    ->state(fn ($record) => $record->tickets()->exists())
+                    ->boolean()
+                    ->trueIcon('heroicon-o-ticket')
+                    ->falseIcon('heroicon-o-minus')
+                    ->trueColor('danger')
+                    ->falseColor('gray'),
             ])
             ->defaultSort('venue_id')
             ->filters([
-                SelectFilter::make('venue_id')
-                    ->label('Зал')
-                    ->relationship('venue', 'name')
-                    ->searchable()
-                    ->preload(),
+                Filter::make('location')
+                    ->form([
+                        Select::make('venue_id')
+                            ->label('Зал')
+                            ->options(\App\Models\Venue::pluck('name', 'id'))
+                            ->live()
+                            ->afterStateUpdated(fn (callable $set) => $set('sector_id', null) && $set('row_number', null)),
+
+                        Select::make('sector_id')
+                            ->label('Сектор')
+                            ->options(fn (callable $get) => \App\Models\Sector::query()
+                                ->when($get('venue_id'), fn ($q, $v) => $q->where('venue_id', $v))
+                                ->orderBy('sort_order')
+                                ->pluck('name', 'id')
+                                ->toArray())
+                            ->live()
+                            ->afterStateUpdated(fn (callable $set) => $set('row_number', null)),
+
+                        Select::make('row_number')
+                            ->label('Ряд')
+                            ->options(fn (callable $get) => \App\Models\Seat::query()
+                                ->when($get('venue_id'), fn ($q, $v) => $q->where('venue_id', $v))
+                                ->when($get('sector_id'), fn ($q, $v) => $q->where('sector_id', $v))
+                                ->distinct()
+                                ->orderBy('row_number')
+                                ->pluck('row_number', 'row_number')
+                                ->toArray()),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['venue_id'], fn ($q, $v) => $q->where('venue_id', $v))
+                            ->when($data['sector_id'], fn ($q, $v) => $q->where('sector_id', $v))
+                            ->when($data['row_number'], fn ($q, $v) => $q->where('row_number', $v));
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['venue_id'] ?? null) {
+                            $indicators[] = 'Зал: ' . \App\Models\Venue::find($data['venue_id'])?->name;
+                        }
+                        if ($data['sector_id'] ?? null) {
+                            $indicators[] = 'Сектор: ' . \App\Models\Sector::find($data['sector_id'])?->name;
+                        }
+                        if ($data['row_number'] ?? null) {
+                            $indicators[] = 'Ряд: ' . $data['row_number'];
+                        }
+                        return $indicators;
+                    }),
             ])
             ->recordActions([
                 EditAction::make()->label('Изменить'),

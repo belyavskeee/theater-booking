@@ -114,19 +114,4 @@ class SectorsRelationManager extends RelationManager
             ->reorderable('sort_order')
             ->defaultSort('sort_order');
     }
-
-    protected function afterCreate(): void
-    {
-        $sector = $this->record;
-
-        for ($row = 1; $row <= $sector->rows_count; $row++) {
-            for ($seat = 1; $seat <= $sector->seats_per_row; $seat++) {
-                $sector->seats()->create([
-                    'venue_id'    => $sector->venue_id,
-                    'row_number'  => $row,
-                    'seat_number' => $seat,
-                ]);
-            }
-        }
-    }
 }
