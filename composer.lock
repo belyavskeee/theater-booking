@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9b0c118ebb99e4c6fb12f8730ef6ab15",
+    "content-hash": "173f3b6b90962944c0e361ada87eba06",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5270,6 +5270,94 @@
             "time": "2026-08-26T09:13:25+00:00"
         },
         {
+            "name": "spatie/laravel-permission",
+            "version": "8.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-permission.git",
+                "reference": "60e8ed5b2fbf043c2264433fc2680c76b8b66aa6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/60e8ed5b2fbf043c2264433fc2680c76b8b66aa6",
+                "reference": "60e8ed5b2fbf043c2264433fc2680c76b8b66aa6",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "^12.0|^13.0",
+                "illuminate/container": "^12.0|^13.0",
+                "illuminate/contracts": "^12.0|^13.0",
+                "illuminate/database": "^12.0|^13.0",
+                "php": "^8.3",
+                "spatie/laravel-package-tools": "^1.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.9",
+                "laravel/octane": "^2.0",
+                "laravel/passport": "^13.0",
+                "laravel/pint": "^1.0",
+                "orchestra/testbench": "^10.0|^11.0",
+                "pestphp/pest": "^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.1",
+                "phpstan/phpstan": "^2.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Permission\\PermissionServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "8.x-dev",
+                    "dev-master": "8.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Permission\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Permission handling for Laravel 12 and up",
+            "homepage": "https://github.com/spatie/laravel-permission",
+            "keywords": [
+                "acl",
+                "laravel",
+                "permission",
+                "permissions",
+                "rbac",
+                "roles",
+                "security",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-permission/issues",
+                "source": "https://github.com/spatie/laravel-permission/tree/8.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-07-03T15:36:01+00:00"
+        },
+        {
             "name": "spatie/shiki-php",
             "version": "2.4.0",
             "source": {
@@ -8247,6 +8335,86 @@
                 }
             ],
             "time": "2026-04-26T05:33:54+00:00"
+        },
+        {
+            "name": "waguilar33/filament-guardian",
+            "version": "v1.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Waguilar33/filament-guardian.git",
+                "reference": "8c1c24c9caf41da1b690a402a5ab1f96b520737e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Waguilar33/filament-guardian/zipball/8c1c24c9caf41da1b690a402a5ab1f96b520737e",
+                "reference": "8c1c24c9caf41da1b690a402a5ab1f96b520737e",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0.4 || ^5.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0",
+                "spatie/laravel-permission": "^6.0 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "~1.29.0",
+                "nunomaduro/collision": "^8.0",
+                "orchestra/testbench": "^9.0|^10.0",
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin-arch": "^3.0",
+                "pestphp/pest-plugin-laravel": "^3.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "FilamentGuardian": "Waguilar\\FilamentGuardian\\Facades\\FilamentGuardian"
+                    },
+                    "providers": [
+                        "Waguilar\\FilamentGuardian\\FilamentGuardianServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Waguilar\\FilamentGuardian\\": "src/",
+                    "Waguilar\\FilamentGuardian\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Aguilar",
+                    "email": "waa2398@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Role and permission management for Filament",
+            "homepage": "https://github.com/Waguilar33/filament-guardian",
+            "keywords": [
+                "filament-guardian",
+                "filamentphp",
+                "laravel",
+                "waguilar33"
+            ],
+            "support": {
+                "issues": "https://github.com/Waguilar33/filament-guardian/issues",
+                "source": "https://github.com/Waguilar33/filament-guardian"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/waguilar",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-09-23T01:40:06+00:00"
         }
     ],
     "packages-dev": [

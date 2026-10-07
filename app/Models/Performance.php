@@ -64,6 +64,14 @@ class Performance extends Model
         return max(0, $this->totalSeats() - $this->takenSeatsCount());
     }
 
+    public function priceFor(Seat $seat): float
+    {
+        $seatModifier   = (float) ($seat->price_modifier ?? 1.0);
+        $sectorModifier = (float) ($seat->sector?->price_modifier ?? 1.0);
+
+        return round($this->base_price * $seatModifier * $sectorModifier, 2);
+    }
+
     /**
      * Статус спроса для UI:
      * sold_out — Нет мест

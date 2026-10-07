@@ -56,7 +56,6 @@ class Sector extends Model
 
     public function generateSeats(): void
     {
-        // 1. Создаём недостающие места
         for ($row = 1; $row <= $this->rows_count; $row++) {
             for ($seat = 1; $seat <= $this->seats_per_row; $seat++) {
                 $this->seats()->firstOrCreate(
@@ -71,14 +70,13 @@ class Sector extends Model
             }
         }
 
-        // 2. Удаляем лишние (за пределами новых границ), только без билетов
         $this->seats()
             ->where(function ($q) {
                 $q->where('row_number', '>', $this->rows_count)
-                  ->orWhere(function ($q2) {
-                      $q2->where('row_number', '<=', $this->rows_count)
-                         ->where('seat_number', '>', $this->seats_per_row);
-                  });
+                ->orWhere(function ($q2) {
+                    $q2->where('row_number', '<=', $this->rows_count)
+                        ->where('seat_number', '>', $this->seats_per_row);
+                });
             })
             ->whereDoesntHave('tickets')
             ->delete();

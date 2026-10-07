@@ -19,6 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationGroup;
+use Waguilar\FilamentGuardian\FilamentGuardianPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -78,6 +79,9 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Настройки')
                     ->icon('heroicon-o-cog-6-tooth'),
+            ])
+            ->plugins([
+                FilamentGuardianPlugin::make(),
             ]);
     }
 }

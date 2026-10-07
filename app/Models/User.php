@@ -9,10 +9,15 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    const ROLE_ADMIN   = 'admin';
+    const ROLE_CASHIER = 'cashier';
+    const ROLE_USER    = 'user';
+
+    use HasFactory, Notifiable, HasRoles;
 
     protected $fillable = [
         'name',
@@ -67,5 +72,15 @@ class User extends Authenticatable
             ->whereHas('performance', fn ($q) => $q->where('starts_at', '<', now()))
             ->with(['performance.spectacle', 'performance.venue', 'seat'])
             ->get();
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isCashier(): bool
+    {
+        return $this->role === self::ROLE_CASHIER;
     }
 }
